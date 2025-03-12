@@ -5,23 +5,135 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cyber-Shelf</title>
     
-    <!-- React and ReactDOM -->
-    <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
-    
-    <!-- Babel for JSX -->
-    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-    
-    <!-- Direct icon imports for Lucide -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://unpkg.com/lucide-react@latest"></script>
-    
     <!-- Tailwind CSS -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     
     <style>
-        body { margin: 0; padding: 0; }
-        .line-clamp-2 {
+        body {
+            background: linear-gradient(135deg, #0D1117 0%, #1A202C 100%);
+            color: #E0E0E0;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        
+        .card {
+            background: #151F2E;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+            margin-bottom: 1rem;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        .category-header {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .category-content {
+            display: none;
+            padding: 0 0.5rem;
+        }
+        
+        .gradient-text {
+            background-image: linear-gradient(90deg, #36EEE0, #F637EC, #FFCC00);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .search-input {
+            background-color: rgba(13, 17, 23, 0.8);
+            border: 1px solid #2D3748;
+            color: #E0E0E0;
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem 0.5rem 2.5rem;
+            width: 100%;
+            transition: all 0.3s;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #36EEE0;
+            box-shadow: 0 0 10px rgba(54, 238, 224, 0.3);
+        }
+        
+        .icon-circle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 0.75rem;
+        }
+        
+        .view-button {
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            border: 1px solid rgba(54, 238, 224, 0.3);
+            background-color: rgba(54, 238, 224, 0.1);
+            color: #36EEE0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .view-button.active {
+            background-color: #36EEE0;
+            color: #0D1117;
+            box-shadow: 0 0 8px rgba(54, 238, 224, 0.5);
+        }
+        
+        .grid-view {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 1rem;
+        }
+        
+        @media (min-width: 768px) {
+            .grid-view {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .grid-view {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        .list-view .card {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+        }
+        
+        .category-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 0 0.25rem;
+        }
+        
+        .truncate-2 {
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
@@ -30,21 +142,392 @@
     </style>
 </head>
 <body>
-    <div id="root"></div>
-    
-    <!-- Load the dashboard separately, but before rendering -->
-    <script type="text/babel" src="dashboard-browser.js"></script>
-    
-    <!-- Render the component -->
-    <script type="text/babel">
-        // Wait for the page to fully load
-        window.onload = function() {
-            // Render the BookmarkDashboard component into the root div
-            ReactDOM.render(
-                <BookmarkDashboard />,
-                document.getElementById('root')
-            );
+    <div class="container">
+        <header class="mb-6">
+            <h1 class="text-3xl font-bold mb-2 gradient-text">
+                NETRUNNER
+                <span class="text-sm font-mono ml-2">v3.0</span>
+            </h1>
+            <p class="text-gray-400 border-b border-gray-800 pb-2">Your personal digital gateway <span class="font-mono text-xs">// 35 resources indexed</span></p>
+        </header>
+
+        <!-- Search and View Controls -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+            <div class="relative w-full md:w-96">
+                <input
+                    type="text"
+                    id="search-input"
+                    placeholder="SEARCH NETWORK..."
+                    class="search-input"
+                />
+                <span class="absolute left-3 top-2.5 text-teal-400">🔍</span>
+                <span id="clear-search" class="absolute right-3 top-2.5 text-pink-400 cursor-pointer hidden">✕</span>
+            </div>
+            <div class="flex space-x-2">
+                <button id="grid-view" class="view-button active">
+                    ⊞
+                </button>
+                <button id="list-view" class="view-button">
+                    ☰
+                </button>
+            </div>
+        </div>
+
+        <!-- Divider with dots -->
+        <div class="flex items-center justify-center my-6">
+            <div class="h-px w-full bg-gray-800"></div>
+            <div class="mx-2 flex space-x-2">
+                <div class="category-dot" style="background-color: #36EEE0;"></div>
+                <div class="category-dot" style="background-color: #F637EC;"></div>
+                <div class="category-dot" style="background-color: #FFCC00;"></div>
+                <div class="category-dot" style="background-color: #FF5E7D;"></div>
+                <div class="category-dot" style="background-color: #3CCF4E;"></div>
+            </div>
+            <div class="h-px w-full bg-gray-800"></div>
+        </div>
+
+        <!-- Content section -->
+        <main id="main-content">
+            <!-- Categories will be inserted here by JavaScript -->
+        </main>
+    </div>
+
+    <script>
+        // Website data with categories
+        const categorizedWebsites = {
+            "Data Visualization & Maps": [
+                { url: "https://earth.nullschool.net/#current/wind/surface/level/orthographic=-1.98,-304.63,1480/loc=-4.034,55.092", name: "Earth Nullschool", description: "Real-time global wind, weather, ocean, and pollution visualization", icon: "🌎" },
+                { url: "https://restor.eco/?lat=26&lng=14.23&zoom=3", name: "Restor", description: "Platform for ecosystem restoration and conservation efforts worldwide", icon: "🌍" },
+                { url: "https://www.shipmap.org/", name: "Ship Map", description: "Interactive map of global shipping movements", icon: "🗺️" },
+                { url: "https://www.carbonmap.org/", name: "Carbon Map", description: "Visualization of carbon emissions and climate responsibility", icon: "🗺️" },
+                { url: "https://globe.adsbexchange.com/", name: "ADS-B Exchange", description: "Real-time flight tracking visualization", icon: "🛫" },
+                { url: "https://rsoe-edis.org/eventMap", name: "RSOE EDIS", description: "Emergency and disaster information service with interactive map", icon: "⚡" }
+            ],
+            "Digital Libraries & Education": [
+                { url: "https://github.com/P1xt/p1xt-guides", name: "P1xt Guides", description: "Programming and computer science learning path guides", icon: "🔖" },
+                { url: "https://libgen.is/", name: "Library Genesis", description: "Search engine for books and academic articles", icon: "📚" },
+                { url: "https://openlibrary.org/", name: "Open Library", description: "Digital lending library with millions of books", icon: "📚" },
+                { url: "https://www.openculture.com/", name: "Open Culture", description: "Collection of free cultural and educational media", icon: "📚" },
+                { url: "https://ask.loc.gov/", name: "Ask Library of Congress", description: "Research assistance from the Library of Congress", icon: "❓" },
+                { url: "https://www.gutenberg.org/", name: "Project Gutenberg", description: "Library of free eBooks of classic literature", icon: "📚" }
+            ],
+            "Tools & Utilities": [
+                { url: "https://www.nytimes.com/wirecutter/", name: "Wirecutter", description: "Product reviews and recommendations", icon: "🛒" },
+                { url: "https://uk.camelcamelcamel.com/", name: "CamelCamelCamel", description: "Amazon price tracker and history charts", icon: "🛒" },
+                { url: "https://ninite.com/help/", name: "Ninite", description: "Bundle installer for popular free software", icon: "⬇️" },
+                { url: "https://10minutemail.com/", name: "10 Minute Mail", description: "Temporary email address service", icon: "📧" },
+                { url: "https://www.nirsoft.net/", name: "NirSoft", description: "Collection of small and useful freeware utilities", icon: "🔧" },
+                { url: "https://tosdr.org/en", name: "Terms of Service; Didn't Read", description: "Analyses and grades website terms of service", icon: "💬" },
+                { url: "https://www.remove.bg/", name: "Remove.bg", description: "Removes background from images automatically", icon: "🔧" },
+                { url: "https://www5.lunapic.com/editor/?action=transparent", name: "LunaPic", description: "Online photo editor with transparency tools", icon: "🔧" },
+                { url: "https://www.deepl.com/en/translator", name: "DeepL Translator", description: "AI-powered language translation tool", icon: "💬" },
+                { url: "https://www.justtherecipe.com/", name: "Just the Recipe", description: "Extracts just the recipe from cooking websites", icon: "☕" }
+            ],
+            "Reference & Guides": [
+                { url: "https://www.thebigproject.co.uk/", name: "The Big Project", description: "Collection of web resources and tutorials", icon: "🔖" },
+                { url: "https://www.fieggen.com/shoelace/", name: "Ian's Shoelace Site", description: "Comprehensive guide to shoelace knots and techniques", icon: "🔖" },
+                { url: "https://sleepopolis.com/calculators/sleep/", name: "Sleep Calculator", description: "Tool to optimize sleep cycles and wake times", icon: "🔧" },
+                { url: "https://forvo.com/", name: "Forvo", description: "Pronunciation guide with audio by native speakers", icon: "💬" },
+                { url: "https://aruljohn.com/", name: "Arul John", description: "Tech tutorials and resources", icon: "🔧" },
+                { url: "https://thenounproject.com/", name: "The Noun Project", description: "Collection of icons representing nouns/concepts", icon: "🔖" }
+            ],
+            "Entertainment & Media": [
+                { url: "https://vimm.net/vault/", name: "Vimm's Lair", description: "Preservation site for classic video games", icon: "📺" },
+                { url: "https://radio.garden/visit/nicosia/RrfQbSTm", name: "Radio Garden", description: "Explore live radio stations around the world", icon: "🎵" },
+                { url: "https://mynoise.net/", name: "myNoise", description: "Background noise and interactive soundscapes", icon: "🎵" },
+                { url: "https://www.atlasobscura.com/", name: "Atlas Obscura", description: "Guide to unusual and obscure travel destinations", icon: "🌎" },
+                { url: "https://oldgamesdownload.com/", name: "Old Games Download", description: "Archive of classic PC games", icon: "⬇️" },
+                { url: "https://watchttn.com/", name: "Watch TTN", description: "Directory of free educational and entertaining videos", icon: "📺" },
+                { url: "https://www.rome2rio.com/", name: "Rome2Rio", description: "Travel planning tool for routes between locations", icon: "🌎" }
+            ]
         };
+
+        // Category colors and descriptions
+        const categoryInfo = {
+            "Data Visualization & Maps": { 
+                color: "#36EEE0", 
+                gradientColor: "#2C3E50", 
+                icon: "🗺️",
+                description: "Interactive maps and data visualizations for global insights"
+            },
+            "Digital Libraries & Education": { 
+                color: "#F637EC", 
+                gradientColor: "#2C3E50", 
+                icon: "📚",
+                description: "Digital libraries, educational resources, and learning platforms"
+            },
+            "Tools & Utilities": { 
+                color: "#FFCC00", 
+                gradientColor: "#2C3E50", 
+                icon: "🔧",
+                description: "Useful online tools and utilities for everyday tasks"
+            },
+            "Reference & Guides": { 
+                color: "#FF5E7D", 
+                gradientColor: "#2C3E50", 
+                icon: "🔖",
+                description: "Reference materials and comprehensive guides on various topics"
+            },
+            "Entertainment & Media": { 
+                color: "#3CCF4E", 
+                gradientColor: "#2C3E50", 
+                icon: "📺",
+                description: "Entertainment resources, media archives, and discovery tools"
+            }
+        };
+
+        // DOM Elements
+        const mainContent = document.getElementById('main-content');
+        const searchInput = document.getElementById('search-input');
+        const clearSearch = document.getElementById('clear-search');
+        const gridViewBtn = document.getElementById('grid-view');
+        const listViewBtn = document.getElementById('list-view');
+        
+        // State
+        let currentView = 'grid';
+        let expandedCategories = {};
+        
+        // Initialize with all categories collapsed
+        Object.keys(categorizedWebsites).forEach(category => {
+            expandedCategories[category] = false;
+        });
+
+        // Initialize the page
+        renderCategories();
+
+        // Event Listeners
+        searchInput.addEventListener('input', handleSearch);
+        clearSearch.addEventListener('click', clearSearchInput);
+        gridViewBtn.addEventListener('click', () => changeView('grid'));
+        listViewBtn.addEventListener('click', () => changeView('list'));
+
+        // Functions
+        function renderCategories() {
+            mainContent.innerHTML = '';
+            
+            if (searchInput.value.trim()) {
+                renderSearchResults(searchInput.value.trim());
+                return;
+            }
+            
+            Object.entries(categorizedWebsites).forEach(([category, sites]) => {
+                const categorySection = document.createElement('div');
+                categorySection.className = 'mb-6';
+                
+                // Create the gradient for this category
+                const gradient = `linear-gradient(135deg, ${categoryInfo[category].gradientColor}, ${categoryInfo[category].color}20)`;
+                
+                // Create header
+                const header = document.createElement('div');
+                header.className = 'category-header';
+                header.style.background = gradient;
+                header.style.borderLeft = `3px solid ${categoryInfo[category].color}`;
+                header.style.boxShadow = `0 0 5px ${categoryInfo[category].color}50`;
+                header.innerHTML = `
+                    <div class="flex items-center">
+                        <div class="icon-circle" style="color: ${categoryInfo[category].color}; background: ${categoryInfo[category].color}20; border: 1px solid ${categoryInfo[category].color}50">
+                            ${categoryInfo[category].icon}
+                        </div>
+                        <div>
+                            <h2 class="font-bold text-lg text-white">${category}</h2>
+                            <p class="text-xs text-gray-300">${categoryInfo[category].description}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-xs mr-2 font-mono" style="color: ${categoryInfo[category].color}">
+                            ${sites.length} items
+                        </span>
+                        <div class="p-1 rounded-full" style="background: ${categoryInfo[category].color}20; border-radius: 50%">
+                            ${expandedCategories[category] ? '▲' : '▼'}
+                        </div>
+                    </div>
+                `;
+                
+                // Toggle category expansion on click
+                header.addEventListener('click', () => {
+                    expandedCategories[category] = !expandedCategories[category];
+                    renderCategories();
+                });
+                
+                categorySection.appendChild(header);
+                
+                // Create content
+                const content = document.createElement('div');
+                content.className = 'category-content';
+                if (expandedCategories[category]) {
+                    content.style.display = 'block';
+                    
+                    if (currentView === 'grid') {
+                        const grid = document.createElement('div');
+                        grid.className = 'grid-view mt-2 mb-6';
+                        
+                        sites.forEach(site => {
+                            grid.appendChild(createSiteCard(site, category));
+                        });
+                        
+                        content.appendChild(grid);
+                    } else {
+                        const list = document.createElement('div');
+                        list.className = 'list-view space-y-2 mt-2 mb-6';
+                        
+                        sites.forEach(site => {
+                            list.appendChild(createSiteListItem(site, category));
+                        });
+                        
+                        content.appendChild(list);
+                    }
+                }
+                
+                categorySection.appendChild(content);
+                mainContent.appendChild(categorySection);
+            });
+        }
+
+        function createSiteCard(site, category) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.style.borderLeft = `2px solid ${categoryInfo[category].color}`;
+            
+            card.innerHTML = `
+                <div class="p-4 relative z-10">
+                    <div class="flex items-center mb-2">
+                        <div class="p-2 rounded-full mr-3" style="color: ${categoryInfo[category].color}; background: ${categoryInfo[category].color}15; border-radius: 50%; border: 1px solid ${categoryInfo[category].color}50">
+                            ${site.icon}
+                        </div>
+                        <div>
+                            <h3 class="font-medium text-white">${site.name}</h3>
+                            <span class="text-xs opacity-70" style="color: ${categoryInfo[category].color}">
+                                ${category}
+                            </span>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-300 truncate-2">${site.description}</p>
+                    <div class="absolute bottom-2 right-2 h-6 w-6 flex items-center justify-center rounded-full" style="background-color: ${categoryInfo[category].color}20; border: 1px solid ${categoryInfo[category].color}50">
+                        ➤
+                    </div>
+                </div>
+            `;
+            
+            card.addEventListener('click', () => {
+                window.open(site.url, '_blank');
+            });
+            
+            card.addEventListener('mouseenter', () => {
+                card.style.boxShadow = `0 0 8px ${categoryInfo[category].color}90`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.boxShadow = 'none';
+            });
+            
+            return card;
+        }
+
+        function createSiteListItem(site, category) {
+            const item = document.createElement('div');
+            item.className = 'card flex items-center p-3';
+            item.style.borderLeft = `2px solid ${categoryInfo[category].color}`;
+            
+            item.innerHTML = `
+                <div class="p-2 rounded-full mr-3 relative" style="color: ${categoryInfo[category].color}; background: ${categoryInfo[category].color}15; border-radius: 50%; border: 1px solid ${categoryInfo[category].color}50">
+                    ${site.icon}
+                </div>
+                <div class="flex-1 min-w-0">
+                    <h3 class="font-medium text-white truncate">${site.name}</h3>
+                    <p class="text-xs text-gray-400 truncate">${site.description}</p>
+                </div>
+                <div class="ml-2 h-6 w-6 flex items-center justify-center rounded-full" style="background-color: ${categoryInfo[category].color}20; border: 1px solid ${categoryInfo[category].color}50">
+                    ➤
+                </div>
+            `;
+            
+            item.addEventListener('click', () => {
+                window.open(site.url, '_blank');
+            });
+            
+            item.addEventListener('mouseenter', () => {
+                item.style.boxShadow = `0 0 8px ${categoryInfo[category].color}90`;
+            });
+            
+            item.addEventListener('mouseleave', () => {
+                item.style.boxShadow = 'none';
+            });
+            
+            return item;
+        }
+
+        function renderSearchResults(query) {
+            const results = [];
+            query = query.toLowerCase();
+            
+            // Find matching sites
+            Object.entries(categorizedWebsites).forEach(([category, sites]) => {
+                sites.forEach(site => {
+                    if (
+                        site.name.toLowerCase().includes(query) || 
+                        site.description.toLowerCase().includes(query) ||
+                        category.toLowerCase().includes(query)
+                    ) {
+                        results.push({ ...site, category });
+                    }
+                });
+            });
+            
+            // Display results
+            if (results.length === 0) {
+                const noResults = document.createElement('div');
+                noResults.className = 'text-center py-12 bg-black bg-opacity-30 rounded-lg border border-gray-800';
+                noResults.innerHTML = '<p class="text-gray-400 font-mono">// NO MATCHING RESULTS FOUND //</p>';
+                mainContent.appendChild(noResults);
+                return;
+            }
+            
+            if (currentView === 'grid') {
+                const grid = document.createElement('div');
+                grid.className = 'grid-view';
+                
+                results.forEach(result => {
+                    grid.appendChild(createSiteCard(result, result.category));
+                });
+                
+                mainContent.appendChild(grid);
+            } else {
+                const list = document.createElement('div');
+                list.className = 'list-view space-y-2';
+                
+                results.forEach(result => {
+                    list.appendChild(createSiteListItem(result, result.category));
+                });
+                
+                mainContent.appendChild(list);
+            }
+        }
+
+        function handleSearch() {
+            const query = searchInput.value.trim();
+            clearSearch.style.display = query ? 'inline' : 'none';
+            renderCategories();
+        }
+
+        function clearSearchInput() {
+            searchInput.value = '';
+            clearSearch.style.display = 'none';
+            renderCategories();
+        }
+
+        function changeView(view) {
+            currentView = view;
+            
+            if (view === 'grid') {
+                gridViewBtn.classList.add('active');
+                listViewBtn.classList.remove('active');
+            } else {
+                gridViewBtn.classList.remove('active');
+                listViewBtn.classList.add('active');
+            }
+            
+            renderCategories();
+        }
     </script>
 </body>
 </html>
