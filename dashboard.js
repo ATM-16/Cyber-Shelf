@@ -1,53 +1,54 @@
-import React, { useState } from 'react';
-import { Search, X, ChevronRight, Grid, List, BookOpen, Wrench, Map, Tv, Bookmark, Globe, Music, Zap, Mail, Download, Coffee, ShoppingCart, MessageSquare, Loader, HelpCircle, ChevronDown, ChevronUp } from 'lucide-react';
-
+// Define the BookmarkDashboard component in the global scope
 const BookmarkDashboard = () => {
+  // Extract Lucide icons from the global lucideReact object
+  const { Search, X, ChevronRight, Grid, List, BookOpen, Wrench, Map, Tv, Bookmark, Globe, Music, Zap, Mail, Download, Coffee, ShoppingCart, MessageSquare, Loader, HelpCircle, ChevronDown, ChevronUp } = lucideReact;
+
   // Website data categorized with specific icons
   const categorizedWebsites = {
     "Data Visualization & Maps": [
-      { url: "https://earth.nullschool.net/#current/wind/surface/level/orthographic=-1.98,-304.63,1480/loc=-4.034,55.092", name: "Earth Nullschool", description: "Real-time global wind, weather, ocean, and pollution visualization", icon: <Globe size={20} /> },
-      { url: "https://restor.eco/?lat=26&lng=14.23&zoom=3", name: "Restor", description: "Platform for ecosystem restoration and conservation efforts worldwide", icon: <Globe size={20} /> },
-      { url: "https://www.shipmap.org/", name: "Ship Map", description: "Interactive map of global shipping movements", icon: <Map size={20} /> },
-      { url: "https://www.carbonmap.org/", name: "Carbon Map", description: "Visualization of carbon emissions and climate responsibility", icon: <Map size={20} /> },
-      { url: "https://globe.adsbexchange.com/", name: "ADS-B Exchange", description: "Real-time flight tracking visualization", icon: <Loader size={20} /> },
-      { url: "https://rsoe-edis.org/eventMap", name: "RSOE EDIS", description: "Emergency and disaster information service with interactive map", icon: <Zap size={20} /> }
+      { url: "https://earth.nullschool.net/#current/wind/surface/level/orthographic=-1.98,-304.63,1480/loc=-4.034,55.092", name: "Earth Nullschool", description: "Real-time global wind, weather, ocean, and pollution visualization", icon: React.createElement(Globe, { size: 20 }) },
+      { url: "https://restor.eco/?lat=26&lng=14.23&zoom=3", name: "Restor", description: "Platform for ecosystem restoration and conservation efforts worldwide", icon: React.createElement(Globe, { size: 20 }) },
+      { url: "https://www.shipmap.org/", name: "Ship Map", description: "Interactive map of global shipping movements", icon: React.createElement(Map, { size: 20 }) },
+      { url: "https://www.carbonmap.org/", name: "Carbon Map", description: "Visualization of carbon emissions and climate responsibility", icon: React.createElement(Map, { size: 20 }) },
+      { url: "https://globe.adsbexchange.com/", name: "ADS-B Exchange", description: "Real-time flight tracking visualization", icon: React.createElement(Loader, { size: 20 }) },
+      { url: "https://rsoe-edis.org/eventMap", name: "RSOE EDIS", description: "Emergency and disaster information service with interactive map", icon: React.createElement(Zap, { size: 20 }) }
     ],
     "Digital Libraries & Education": [
-      { url: "https://github.com/P1xt/p1xt-guides", name: "P1xt Guides", description: "Programming and computer science learning path guides", icon: <Bookmark size={20} /> },
-      { url: "https://libgen.is/", name: "Library Genesis", description: "Search engine for books and academic articles", icon: <BookOpen size={20} /> },
-      { url: "https://openlibrary.org/", name: "Open Library", description: "Digital lending library with millions of books", icon: <BookOpen size={20} /> },
-      { url: "https://www.openculture.com/", name: "Open Culture", description: "Collection of free cultural and educational media", icon: <BookOpen size={20} /> },
-      { url: "https://ask.loc.gov/", name: "Ask Library of Congress", description: "Research assistance from the Library of Congress", icon: <HelpCircle size={20} /> },
-      { url: "https://www.gutenberg.org/", name: "Project Gutenberg", description: "Library of free eBooks of classic literature", icon: <BookOpen size={20} /> }
+      { url: "https://github.com/P1xt/p1xt-guides", name: "P1xt Guides", description: "Programming and computer science learning path guides", icon: React.createElement(Bookmark, { size: 20 }) },
+      { url: "https://libgen.is/", name: "Library Genesis", description: "Search engine for books and academic articles", icon: React.createElement(BookOpen, { size: 20 }) },
+      { url: "https://openlibrary.org/", name: "Open Library", description: "Digital lending library with millions of books", icon: React.createElement(BookOpen, { size: 20 }) },
+      { url: "https://www.openculture.com/", name: "Open Culture", description: "Collection of free cultural and educational media", icon: React.createElement(BookOpen, { size: 20 }) },
+      { url: "https://ask.loc.gov/", name: "Ask Library of Congress", description: "Research assistance from the Library of Congress", icon: React.createElement(HelpCircle, { size: 20 }) },
+      { url: "https://www.gutenberg.org/", name: "Project Gutenberg", description: "Library of free eBooks of classic literature", icon: React.createElement(BookOpen, { size: 20 }) }
     ],
     "Tools & Utilities": [
-      { url: "https://www.nytimes.com/wirecutter/", name: "Wirecutter", description: "Product reviews and recommendations", icon: <ShoppingCart size={20} /> },
-      { url: "https://uk.camelcamelcamel.com/", name: "CamelCamelCamel", description: "Amazon price tracker and history charts", icon: <ShoppingCart size={20} /> },
-      { url: "https://ninite.com/help/", name: "Ninite", description: "Bundle installer for popular free software", icon: <Download size={20} /> },
-      { url: "https://10minutemail.com/", name: "10 Minute Mail", description: "Temporary email address service", icon: <Mail size={20} /> },
-      { url: "https://www.nirsoft.net/", name: "NirSoft", description: "Collection of small and useful freeware utilities", icon: <Wrench size={20} /> },
-      { url: "https://tosdr.org/en", name: "Terms of Service; Didn't Read", description: "Analyses and grades website terms of service", icon: <MessageSquare size={20} /> },
-      { url: "https://www.remove.bg/", name: "Remove.bg", description: "Removes background from images automatically", icon: <Wrench size={20} /> },
-      { url: "https://www5.lunapic.com/editor/?action=transparent", name: "LunaPic", description: "Online photo editor with transparency tools", icon: <Wrench size={20} /> },
-      { url: "https://www.deepl.com/en/translator", name: "DeepL Translator", description: "AI-powered language translation tool", icon: <MessageSquare size={20} /> },
-      { url: "https://www.justtherecipe.com/", name: "Just the Recipe", description: "Extracts just the recipe from cooking websites", icon: <Coffee size={20} /> }
+      { url: "https://www.nytimes.com/wirecutter/", name: "Wirecutter", description: "Product reviews and recommendations", icon: React.createElement(ShoppingCart, { size: 20 }) },
+      { url: "https://uk.camelcamelcamel.com/", name: "CamelCamelCamel", description: "Amazon price tracker and history charts", icon: React.createElement(ShoppingCart, { size: 20 }) },
+      { url: "https://ninite.com/help/", name: "Ninite", description: "Bundle installer for popular free software", icon: React.createElement(Download, { size: 20 }) },
+      { url: "https://10minutemail.com/", name: "10 Minute Mail", description: "Temporary email address service", icon: React.createElement(Mail, { size: 20 }) },
+      { url: "https://www.nirsoft.net/", name: "NirSoft", description: "Collection of small and useful freeware utilities", icon: React.createElement(Wrench, { size: 20 }) },
+      { url: "https://tosdr.org/en", name: "Terms of Service; Didn't Read", description: "Analyses and grades website terms of service", icon: React.createElement(MessageSquare, { size: 20 }) },
+      { url: "https://www.remove.bg/", name: "Remove.bg", description: "Removes background from images automatically", icon: React.createElement(Wrench, { size: 20 }) },
+      { url: "https://www5.lunapic.com/editor/?action=transparent", name: "LunaPic", description: "Online photo editor with transparency tools", icon: React.createElement(Wrench, { size: 20 }) },
+      { url: "https://www.deepl.com/en/translator", name: "DeepL Translator", description: "AI-powered language translation tool", icon: React.createElement(MessageSquare, { size: 20 }) },
+      { url: "https://www.justtherecipe.com/", name: "Just the Recipe", description: "Extracts just the recipe from cooking websites", icon: React.createElement(Coffee, { size: 20 }) }
     ],
     "Reference & Guides": [
-      { url: "https://www.thebigproject.co.uk/", name: "The Big Project", description: "Collection of web resources and tutorials", icon: <Bookmark size={20} /> },
-      { url: "https://www.fieggen.com/shoelace/", name: "Ian's Shoelace Site", description: "Comprehensive guide to shoelace knots and techniques", icon: <Bookmark size={20} /> },
-      { url: "https://sleepopolis.com/calculators/sleep/", name: "Sleep Calculator", description: "Tool to optimize sleep cycles and wake times", icon: <Wrench size={20} /> },
-      { url: "https://forvo.com/", name: "Forvo", description: "Pronunciation guide with audio by native speakers", icon: <MessageSquare size={20} /> },
-      { url: "https://aruljohn.com/", name: "Arul John", description: "Tech tutorials and resources", icon: <Wrench size={20} /> },
-      { url: "https://thenounproject.com/", name: "The Noun Project", description: "Collection of icons representing nouns/concepts", icon: <Bookmark size={20} /> }
+      { url: "https://www.thebigproject.co.uk/", name: "The Big Project", description: "Collection of web resources and tutorials", icon: React.createElement(Bookmark, { size: 20 }) },
+      { url: "https://www.fieggen.com/shoelace/", name: "Ian's Shoelace Site", description: "Comprehensive guide to shoelace knots and techniques", icon: React.createElement(Bookmark, { size: 20 }) },
+      { url: "https://sleepopolis.com/calculators/sleep/", name: "Sleep Calculator", description: "Tool to optimize sleep cycles and wake times", icon: React.createElement(Wrench, { size: 20 }) },
+      { url: "https://forvo.com/", name: "Forvo", description: "Pronunciation guide with audio by native speakers", icon: React.createElement(MessageSquare, { size: 20 }) },
+      { url: "https://aruljohn.com/", name: "Arul John", description: "Tech tutorials and resources", icon: React.createElement(Wrench, { size: 20 }) },
+      { url: "https://thenounproject.com/", name: "The Noun Project", description: "Collection of icons representing nouns/concepts", icon: React.createElement(Bookmark, { size: 20 }) }
     ],
     "Entertainment & Media": [
-      { url: "https://vimm.net/vault/", name: "Vimm's Lair", description: "Preservation site for classic video games", icon: <Tv size={20} /> },
-      { url: "https://radio.garden/visit/nicosia/RrfQbSTm", name: "Radio Garden", description: "Explore live radio stations around the world", icon: <Music size={20} /> },
-      { url: "https://mynoise.net/", name: "myNoise", description: "Background noise and interactive soundscapes", icon: <Music size={20} /> },
-      { url: "https://www.atlasobscura.com/", name: "Atlas Obscura", description: "Guide to unusual and obscure travel destinations", icon: <Globe size={20} /> },
-      { url: "https://oldgamesdownload.com/", name: "Old Games Download", description: "Archive of classic PC games", icon: <Download size={20} /> },
-      { url: "https://watchttn.com/", name: "Watch TTN", description: "Directory of free educational and entertaining videos", icon: <Tv size={20} /> },
-      { url: "https://www.rome2rio.com/", name: "Rome2Rio", description: "Travel planning tool for routes between locations", icon: <Globe size={20} /> }
+      { url: "https://vimm.net/vault/", name: "Vimm's Lair", description: "Preservation site for classic video games", icon: React.createElement(Tv, { size: 20 }) },
+      { url: "https://radio.garden/visit/nicosia/RrfQbSTm", name: "Radio Garden", description: "Explore live radio stations around the world", icon: React.createElement(Music, { size: 20 }) },
+      { url: "https://mynoise.net/", name: "myNoise", description: "Background noise and interactive soundscapes", icon: React.createElement(Music, { size: 20 }) },
+      { url: "https://www.atlasobscura.com/", name: "Atlas Obscura", description: "Guide to unusual and obscure travel destinations", icon: React.createElement(Globe, { size: 20 }) },
+      { url: "https://oldgamesdownload.com/", name: "Old Games Download", description: "Archive of classic PC games", icon: React.createElement(Download, { size: 20 }) },
+      { url: "https://watchttn.com/", name: "Watch TTN", description: "Directory of free educational and entertaining videos", icon: React.createElement(Tv, { size: 20 }) },
+      { url: "https://www.rome2rio.com/", name: "Rome2Rio", description: "Travel planning tool for routes between locations", icon: React.createElement(Globe, { size: 20 }) }
     ]
   };
 
@@ -56,43 +57,43 @@ const BookmarkDashboard = () => {
     "Data Visualization & Maps": { 
       color: "#36EEE0", 
       gradientColor: "#2C3E50", 
-      icon: <Map size={20} />,
+      icon: React.createElement(Map, { size: 20 }),
       description: "Interactive maps and data visualizations for global insights"
     },
     "Digital Libraries & Education": { 
       color: "#F637EC", 
       gradientColor: "#2C3E50", 
-      icon: <BookOpen size={20} />,
+      icon: React.createElement(BookOpen, { size: 20 }),
       description: "Digital libraries, educational resources, and learning platforms"
     },
     "Tools & Utilities": { 
       color: "#FFCC00", 
       gradientColor: "#2C3E50", 
-      icon: <Wrench size={20} />,
+      icon: React.createElement(Wrench, { size: 20 }),
       description: "Useful online tools and utilities for everyday tasks"
     },
     "Reference & Guides": { 
       color: "#FF5E7D", 
       gradientColor: "#2C3E50", 
-      icon: <Bookmark size={20} />,
+      icon: React.createElement(Bookmark, { size: 20 }),
       description: "Reference materials and comprehensive guides on various topics"
     },
     "Entertainment & Media": { 
       color: "#3CCF4E", 
       gradientColor: "#2C3E50", 
-      icon: <Tv size={20} />,
+      icon: React.createElement(Tv, { size: 20 }),
       description: "Entertainment resources, media archives, and discovery tools"
     }
   };
 
   // State variables
-  const [viewMode, setViewMode] = useState('grid');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [expandedCategories, setExpandedCategories] = useState(Object.keys(categorizedWebsites).reduce((acc, category) => {
+  const [viewMode, setViewMode] = React.useState('grid');
+  const [searchTerm, setSearchTerm] = React.useState('');
+  const [expandedCategories, setExpandedCategories] = React.useState(Object.keys(categorizedWebsites).reduce((acc, category) => {
     acc[category] = false; // Initialize all categories as collapsed
     return acc;
   }, {}));
-  const [hoveredSite, setHoveredSite] = useState(null);
+  const [hoveredSite, setHoveredSite] = React.useState(null);
 
   // Toggle category expansion
   const toggleCategory = (category) => {
@@ -192,7 +193,7 @@ const BookmarkDashboard = () => {
                     border: `1px solid ${categoryInfo[category].color}50`
                   }}
                 >
-                  <ChevronRight size={14} style={{ color: categoryInfo[category].color }} />
+                  {React.createElement(ChevronRight, { size: 14, style: { color: categoryInfo[category].color } })}
                 </div>
               </div>
             </div>
@@ -232,8 +233,8 @@ const BookmarkDashboard = () => {
               >
                 {site.icon}
               </div>
-              <div className="flex-1">
-                <h3 className="font-medium text-white">{site.name}</h3>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-medium text-white truncate">{site.name}</h3>
                 <p className="text-xs text-gray-400 truncate">{site.description}</p>
               </div>
               <div 
@@ -243,7 +244,7 @@ const BookmarkDashboard = () => {
                   border: `1px solid ${categoryInfo[category].color}50`
                 }}
               >
-                <ChevronRight size={14} style={{ color: categoryInfo[category].color }} />
+                {React.createElement(ChevronRight, { size: 14, style: { color: categoryInfo[category].color } })}
               </div>
             </div>
           );
@@ -313,7 +314,7 @@ const BookmarkDashboard = () => {
                       border: `1px solid ${categoryInfo[site.category].color}50`
                     }}
                   >
-                    <ChevronRight size={14} style={{ color: categoryInfo[site.category].color }} />
+                    {React.createElement(ChevronRight, { size: 14, style: { color: categoryInfo[site.category].color } })}
                   </div>
                 </div>
               </div>
@@ -370,7 +371,7 @@ const BookmarkDashboard = () => {
                     border: `1px solid ${categoryInfo[site.category].color}50`
                   }}
                 >
-                  <ChevronRight size={14} style={{ color: categoryInfo[site.category].color }} />
+                  {React.createElement(ChevronRight, { size: 14, style: { color: categoryInfo[site.category].color } })}
                 </div>
               </div>
             );
@@ -421,8 +422,8 @@ const BookmarkDashboard = () => {
               }}
             >
               {expandedCategories[category] ? 
-                <ChevronUp size={16} style={{ color: categoryInfo[category].color }} /> : 
-                <ChevronDown size={16} style={{ color: categoryInfo[category].color }} />
+                React.createElement(ChevronUp, { size: 16, style: { color: categoryInfo[category].color } }) : 
+                React.createElement(ChevronDown, { size: 16, style: { color: categoryInfo[category].color } })
               }
             </div>
           </div>
@@ -473,14 +474,18 @@ const BookmarkDashboard = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <Search className="absolute left-3 top-2.5" style={{ color: '#36EEE0' }} size={18} />
+          {React.createElement(Search, { 
+            className: "absolute left-3 top-2.5", 
+            style: { color: '#36EEE0' }, 
+            size: 18 
+          })}
           {searchTerm && (
-            <X 
-              className="absolute right-3 top-2.5 cursor-pointer hover:text-white" 
-              style={{ color: '#F637EC' }}
-              size={18} 
-              onClick={() => setSearchTerm('')}
-            />
+            React.createElement(X, { 
+              className: "absolute right-3 top-2.5 cursor-pointer hover:text-white", 
+              style: { color: '#F637EC' },
+              size: 18,
+              onClick: () => setSearchTerm('')
+            })
           )}
         </div>
         <div className="flex space-x-2">
@@ -494,7 +499,7 @@ const BookmarkDashboard = () => {
             }}
             onClick={() => setViewMode('grid')}
           >
-            <Grid size={20} />
+            {React.createElement(Grid, { size: 20 })}
           </button>
           <button 
             className="p-2 rounded transition-all duration-300"
@@ -506,7 +511,7 @@ const BookmarkDashboard = () => {
             }}
             onClick={() => setViewMode('list')}
           >
-            <List size={20} />
+            {React.createElement(List, { size: 20 })}
           </button>
         </div>
       </div>
@@ -533,5 +538,3 @@ const BookmarkDashboard = () => {
     </div>
   );
 };
-
-export default BookmarkDashboard;
